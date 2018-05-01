@@ -1,5 +1,5 @@
-var vehicleContract = artifacts.require("./vehicleContract.sol");
+var VehicleContract = artifacts.require("./VehicleContract.sol");
 
 module.exports = function(deployer){
-  deployer.deploy(vehicleContract);
+  deployer.deploy(VehicleContract);
 };

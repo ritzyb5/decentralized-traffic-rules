@@ -15,7 +15,7 @@ contract VehicleContract {
 
 	struct Vehicle {
 		bytes32 ownerName;
-		Ticket[] pendingTickets;
+		mapping(uint => Ticket) pendingTickets;
 	}
 
 	struct Sensor {
@@ -37,7 +37,7 @@ contract VehicleContract {
 	// Function: Register vehicle, check speed (sensor), give ticket (sensor), pay ticket
 
 	function registerVehicle(bytes32 name) public {
-		registeredVehicles[msg.sender] = Vehicle(name, new Ticket[](0));
+		registeredVehicles[msg.sender] = Vehicle(name);//new Ticket[](0)
 	}
 
 	function addSensor(uint speed) public {
@@ -54,7 +54,8 @@ contract VehicleContract {
 
 	function giveTicket(address vid, address sid, uint measuredSpeed) public {
 		TicketAdded(now, vid, msg.sender, measuredSpeed);
-		registeredVehicles[vid].pendingTickets.push(Ticket(ticketNumber++, vid, sid, measuredSpeed, now));
+		registeredVehicles[vid].pendingTickets[ticketNumber] = Ticket(ticketNumber, vid, sid, measuredSpeed, now);
+		ticketNumber++;
 	}
 
 	// Need to:
