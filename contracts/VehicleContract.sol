@@ -9,6 +9,7 @@ contract VehicleContract {
 	mapping(address => Vehicle) registeredVehicles;
 	mapping(address => Sensor) sensors;
 	event TicketAdded(uint time, address vehicleID, address sensorID, uint measuredSpeed);
+	event VehicleAdded(address sensorID);
 	uint ticketNumber;
 
 	// Structures: Vehicle, city sensors, tickets
