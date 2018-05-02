@@ -9,13 +9,14 @@ contract VehicleContract {
 	mapping(address => Vehicle) registeredVehicles;
 	mapping(address => Sensor) sensors;
 	event TicketAdded(uint time, address vehicleID, address sensorID, uint measuredSpeed);
-	event VehicleAdded(address sensorID);
+	event TicketPayed(uint time, address vehcileID, uint amount);
 	uint ticketNumber;
 
 	// Structures: Vehicle, city sensors, tickets
 
 	struct Vehicle {
-		bytes32 ownerName;
+		string ownerName;
+		uint[] ticketIds;
 		mapping(uint => Ticket) pendingTickets;
 	}
 
@@ -37,9 +38,20 @@ contract VehicleContract {
 
 	// Function: Register vehicle, check speed (sensor), give ticket (sensor), pay ticket
 
-	function registerVehicle(bytes32 name) public {
-		registeredVehicles[msg.sender] = Vehicle(name);//new Ticket[](0)
+	function registerVehicle(string name) public {
+		registeredVehicles[msg.sender] = Vehicle(name, new uint[](0));//new Ticket[](0)
 	}
+
+	function displayVehicleName(address vid) public view returns (string){
+		Vehicle storage v = registeredVehicles[vid];
+		return (v.ownerName);
+	}
+
+	function displayVehicleTickets(address vid) public view returns (uint[]){
+		Vehicle storage v = registeredVehicles[vid];
+		return (v.ticketIds);
+	}
+
 
 	function addSensor(uint speed) public {
 		sensors[msg.sender] = Sensor(speed);
@@ -56,8 +68,23 @@ contract VehicleContract {
 	function giveTicket(address vid, address sid, uint measuredSpeed) public {
 		TicketAdded(now, vid, msg.sender, measuredSpeed);
 		registeredVehicles[vid].pendingTickets[ticketNumber] = Ticket(ticketNumber, vid, sid, measuredSpeed, now);
+		registeredVehicles[vid].ticketIds.push(ticketNumber);
 		ticketNumber++;
 	}
 
+	function payTicket(uint ticketId, address receiver) payable public{
+		/* require(msg.value>=1 ether); */
+		uint change=0;
+		receiver.transfer(msg.value);
+
+		/* if(msg.value>1){
+			change = msg.value-1;
+			msg.sender.transfer(change);
+		} */
+		delete registeredVehicles[msg.sender].pendingTickets[ticketId];
+		delete registeredVehicles[msg.sender].ticketIds[ticketId];
+
+		TicketPayed(now, msg.sender, msg.value);
+	}
 	// Need to:
 }
