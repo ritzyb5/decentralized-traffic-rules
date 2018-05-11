@@ -1,4 +1,8 @@
-# decentralized-traffic-rules
+# Smart Contract Based Traffic Rules
+Ritika Barakol & Rebecca Lee
+Viterbi School of Engineering
+University of Southern California
+
 Currently, traffic rules are implemented by police.
 This requires citizens to trust that a central authority will fairly
 enforce the rules. With the advent of IoT and Smart Cities,
